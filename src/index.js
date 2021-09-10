@@ -13,17 +13,17 @@ const config = {
 
 async function unlock() {
     const response = await axios.post(UNLOCK_URL, params.toString(), config);
-
     const data = response.data;
-    console.log(data);
 
-    if(!data) throw new Error('Response has no data');
-
+    if(!data) {
+        console.log('Kan inte öppna')
+        return;
+    }
 
     if(response.data.includes('error')) {
-        throw new Error('Response includes error, unable to open');
+        console.log('Fel uppstod');
     } else {
-        console.log('Successfully unlocked');
+        console.log('Öppnad!');
     }
 }
 
