@@ -1,6 +1,8 @@
 const axios = require('axios');
+const express = require('express');
 
-const UNLOCK_URL = 'http://hemma.sgsstudentbostader.se/DoorControl/PerformUnlock';
+const port = 10111;
+const unlock_url = 'http://hemma.sgsstudentbostader.se/DoorControl/PerformUnlock';
 
 const params = new URLSearchParams();
 params.append('epName', 'Lindholmsallén 25 Gatan');
@@ -12,19 +14,31 @@ const config = {
 };
 
 async function unlock() {
-    const response = await axios.post(UNLOCK_URL, params.toString(), config);
+    const response = await axios.post(unlock_url, params.toString(), config);
     const data = response.data;
 
     if(!data) {
-        console.log('Kan inte öppna')
-        return;
+        throw new Error('Kan inte öppna');
     }
 
     if(response.data.includes('error')) {
-        console.log('Fel uppstod');
-    } else {
-        console.log('Öppnad!');
+        throw new Error('Fel uppstod');
     }
 }
 
-unlock();
+const app = express();
+
+app.post('/unlock', (req, res) => {
+    unlock()
+        .then(() => {
+            res.send('Öppet!');
+        })
+        .catch((error) => {
+            res.send(error.message);
+        });
+});
+
+app.listen(port, () => {
+    console.log(`App listening at http://localhost:${port}`);
+});
+
