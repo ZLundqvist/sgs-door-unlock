@@ -15,17 +15,18 @@ async function unlock() {
 
 function getResponseMessage(data) {
     const root = parser.parse(data);
-    const message = root.querySelector('.doorControlMessage').text;
+    const message = root.querySelector('.doorControlMessage').text.trim();
     return message;
 }
-
 
 module.exports = (req, res) => {
     unlock()
         .then((message) => {
+            console.log('[%s] %s %s => %s', new Date().toLocaleString(), req.path, req.ip, message);
             res.send(message);
         })
         .catch((error) => {
+            console.error('[%s] %s %s => %s', new Date().toLocaleString(), req.path, req.ip, error.message);
             res.send(error.message);
         });
 };
