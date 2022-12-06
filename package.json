@@ -9,7 +9,7 @@
   "author": "ZL",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.24.0",
+    "axios": "^1.2.1",
     "express": "^4.17.2",
     "node-html-parser": "^5.1.0"
   }
